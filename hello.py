@@ -20,7 +20,7 @@ def create_user():
         return jsonify ({
             "message": "Usuario Adicionado",
             "usuarios": usuarios
-            }), 201
+        }), 201
     
 @app.route("/users", methods=["GET"])
 def get_users():
