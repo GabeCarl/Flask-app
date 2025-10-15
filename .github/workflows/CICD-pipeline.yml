@@ -27,7 +27,7 @@ jobs:
         run: |
           pytest
 
-  Dockerfile publish:
+  Dockerfile-publish:
     needs: Pytest
     runs-on: ubuntu-latest
     steps:
