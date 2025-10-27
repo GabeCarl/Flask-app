@@ -15,6 +15,6 @@ def test_get_users():
 
 def test_post_user():
     payload = {"nome": "Teste"}
-    response = requests.post(f"{url}/user", json=payload)
+    response = requests.post(f"{url}/users", json=payload)
     print (response.text)
     assert response.status_code == 201

@@ -8,7 +8,7 @@ usuarios = []
 def health():
     return { "status": "ok" }, 200
 
-@app.route("/user", methods=["POST"])
+@app.route("/users", methods=["POST"])
 def create_user():
         data = request.get_json()
         nome = data.get("nome")
