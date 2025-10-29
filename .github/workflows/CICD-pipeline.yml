@@ -17,15 +17,7 @@ jobs:
         uses: actions/setup-python@v5
       
       - name: Install dependencies
-        run: pip install pytest
-
-      - name: build dockerfile
-        run: |
-          docker build -t flask-app .
-
-      - name: run docker container
-        run: |
-          docker run -d -p 5000:5000 --name flask-container flask-app
+        run: pip install requirements.txt pytest
 
       - name: Run tests
         run: |
