@@ -23,12 +23,23 @@ jobs:
         run: |
           pytest
 
+      - name: Artifact upload repo
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifact
+          path: |
+            src/app
+            Dockerfile
+            requirements.txt
+
   Dockerfile-publish:
     needs: Pytest
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v5
+      - name: Artifact download repo
+        uses: actions/download-artifact@v5
+        with:
+          name: Artifact
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
