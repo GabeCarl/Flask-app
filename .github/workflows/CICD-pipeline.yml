@@ -55,3 +55,22 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
             ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}
+      
+  Create-kind-cluster:
+    needs: Dockerfile-publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v5
+
+      - name: Set up cluster
+        uses: engineerd/setup-kind@v0.6.2
+
+      - name: test cluster
+        run: |
+          kubectl cluster-info
+          kubectl version
+          kubectl get pods -n kube-system
+          docker --version
+
+
