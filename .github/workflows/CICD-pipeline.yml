@@ -79,7 +79,6 @@ jobs:
       - name: Test deployment
         run: |
           kubectl rollout status deployment/hello-deployment
-          kubectl rollout status service/hello-service
 
       - name: Test request
         run: |
