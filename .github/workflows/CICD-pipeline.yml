@@ -74,13 +74,17 @@ jobs:
       
       - name: Get IP and NodePort
         run: |
-          echo "URL=https://$(kubectl get svc hello-service -o jsonpath='{.spec.clusterIP}:{.spec.ports[0].nodePort}')" >> $GITHUB_ENV"
+          echo "URL=http://$$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kind-control-plane):$(kubectl get svc hello-service -o jsonpath='{.spec.ports[0].nodePort}')" >> "$GITHUB_ENV"
           
       - name: Test deployment
         run: |
           kubectl rollout status deployment/hello-deployment
           kubectl rollout status service/hello-service
-          
+
+      - name: Test request
+        run: |
+          pytest tests/http_test_request.py
+
 
       
 
