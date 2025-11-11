@@ -68,7 +68,8 @@ jobs:
 
       - name: test cluster
         run: |
-          kind load docker-image ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+          docker build -t  gabrielcarl/flask-app:latest .
+          kind load docker-image gabrielcarl/flask-app:latest
           kubectl apply -f k8s/
           kubectl rollout status deployment/hello-deployment
 
