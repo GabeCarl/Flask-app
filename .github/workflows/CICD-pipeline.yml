@@ -68,9 +68,11 @@ jobs:
 
       - name: test cluster
         run: |
-          kubectl cluster-info
-          kubectl version
-          kubectl get pods -n kube-system
-          docker --version
+          kind load docker-image ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+          kubectl apply -f k8s/
+          kubectl rollout status deployment/hello-deployment
+
+
+
 
 
