@@ -97,7 +97,7 @@ jobs:
 
       - name: Pytest requests
         run: |
-          if not $URL: pytest.skip("URL not set")
+          if [ -z "$URL" ]; then echo "URL is not set"; exit 1; fi
           python -m pip install --upgrade pip
           pip install pytest requests
           pytest tests/http_test_requests.py
