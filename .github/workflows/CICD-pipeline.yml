@@ -64,6 +64,13 @@ jobs:
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
             ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}
+
+      - name: Set output
+        id: docker_image
+        run: echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:latest" >> $GITHUB_OUTPUT
+
+    outputs:
+      image: ${{ steps.docker_image.outputs.IMAGE }}
       
   Create-kind-cluster:
     needs: Dockerfile-publish
@@ -79,8 +86,8 @@ jobs:
 
       - name: Apply manifests
         run: |
-          docker pull gabrielcarl/flask-app:latest
-          kind load docker-image gabrielcarl/flask-app:latest
+          docker pull ${{ needs.Dockerfile-publish.outputs.image }}
+          kind load docker-image ${{ needs.Dockerfile-publish.outputs.image }}
           kubectl apply --record -f k8s/
       
       - name: Get IP and NodePort
@@ -98,6 +105,7 @@ jobs:
       - name: Pytest requests
         run: |
           if [ -z "$URL" ]; then echo "URL is not set"; exit 1; fi
+          while ! curl -s $URL/health; do sleep 5; done
           python -m pip install --upgrade pip
           pip install pytest requests
           pytest tests/http_test_requests.py
