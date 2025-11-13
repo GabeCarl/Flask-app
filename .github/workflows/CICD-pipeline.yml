@@ -106,7 +106,7 @@ jobs:
       - name: Pytest requests
         run: |
           if [ -z "$URL" ]; then echo "URL is not set"; exit 1; fi
-          while ! curl -s $URL/health; do sleep 5; done
+          n=1; while [ $n -le 5 ] && ! curl -sf "$URL/health" > /dev/null; do sleep 5; n=$((n+1)); done
           python -m pip install --upgrade pip
           pip install pytest requests
           pytest tests/http_test_requests.py
