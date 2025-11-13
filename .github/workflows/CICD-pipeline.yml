@@ -45,7 +45,7 @@ jobs:
     needs: Pytest
     runs-on: ubuntu-latest
     outputs:
-      image: ${{ steps.docker_image.outputs.IMAGE }}
+      image: ${{ steps.set-image.outputs.IMAGE }}
     steps:
       - name: Artifact download repo
         uses: actions/download-artifact@v5
@@ -68,7 +68,7 @@ jobs:
             ${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}
 
       - name: Set output
-        id: docker_image
+        id: set-image
         run: |
           echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT
           echo "DEBUG: wrote IMAGE to GITHUB_OUTPUT -> $IMAGE"
