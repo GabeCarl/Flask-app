@@ -79,9 +79,9 @@ jobs:
 
       - name: Apply manifests
         run: |
-          docker build -t  gabrielcarl/flask-app:latest .
+          docker pull gabrielcarl/flask-app:latest
           kind load docker-image gabrielcarl/flask-app:latest
-          kubectl apply -f k8s/
+          kubectl apply --record -f k8s/
       
       - name: Get IP and NodePort
         run: |
@@ -101,11 +101,3 @@ jobs:
           python -m pip install --upgrade pip
           pip install pytest requests
           pytest tests/http_test_requests.py
-
-
-      
-
-
-
-
-
