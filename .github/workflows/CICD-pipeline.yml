@@ -44,6 +44,8 @@ jobs:
   Dockerfile-publish:
     needs: Pytest
     runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.docker_image.outputs.IMAGE }}
     steps:
       - name: Artifact download repo
         uses: actions/download-artifact@v5
@@ -67,10 +69,9 @@ jobs:
 
       - name: Set output
         id: docker_image
-        run: echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:latest" >> $GITHUB_OUTPUT
+        run: echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT
 
-    outputs:
-      image: ${{ steps.docker_image.outputs.IMAGE }}
+   
       
   Create-kind-cluster:
     needs: Dockerfile-publish
