@@ -71,10 +71,11 @@ jobs:
         id: docker_image
         run: |
           echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "DEBUG: wrote IMAGE to GITHUB_OUTPUT -> $IMAGE"
 
-
-      - name: Debug output
+      - name: Debug step output (immediate)
         run: |
+          echo "DEBUG: steps.set-image.outputs.IMAGE => '${{ steps.set-image.outputs.IMAGE }}'"
           echo "Contents of GITHUB_OUTPUT file:"
           cat "${GITHUB_OUTPUT}" || true
     
@@ -83,6 +84,10 @@ jobs:
     needs: Dockerfile-publish
     runs-on: ubuntu-latest
     steps:
+      - name: Debug image value from previous job
+        run: |
+          echo "DEBUG: needs.Dockerfile-publish.outputs.image => '${{ needs.Dockerfile-publish.outputs.image }}'"
+
       - name: Artifact download repo
         uses: actions/download-artifact@v5
         with:
