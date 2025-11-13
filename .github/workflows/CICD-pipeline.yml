@@ -32,6 +32,15 @@ jobs:
             Dockerfile
             requirements.txt
 
+      - name: Artifact upload repo2
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifact2
+          path: |
+            k8s/*
+            tests/http_test_requests.py
+
+
   Dockerfile-publish:
     needs: Pytest
     runs-on: ubuntu-latest
@@ -60,8 +69,10 @@ jobs:
     needs: Dockerfile-publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v5
+      - name: Artifact download repo
+        uses: actions/download-artifact@v5
+        with:
+          name: Artifact2
 
       - name: Set up cluster
         uses: engineerd/setup-kind@v0.6.2
@@ -75,7 +86,8 @@ jobs:
       - name: Get IP and NodePort
         run: |
           echo URL="http://$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' kind-control-plane):$(kubectl get svc hello-port -o jsonpath='{.spec.ports[0].nodePort}')" >> $GITHUB_ENV
-          echo {{ env.URL }}
+          echo $URL
+
       - name: Test deployment
         run: |
           kubectl rollout status deployment/hello-deployment
@@ -85,6 +97,7 @@ jobs:
 
       - name: Pytest requests
         run: |
+          if not $URL: pytest.skip("URL not set")
           python -m pip install --upgrade pip
           pip install pytest requests
           pytest tests/http_test_requests.py
