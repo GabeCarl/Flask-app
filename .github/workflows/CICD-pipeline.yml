@@ -71,7 +71,7 @@ jobs:
         id: docker_image
         run: |
           echo "IMAGE=${{ secrets.DOCKER_USERNAME }}/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT
-          echo ${{ Dockerfile-publish.outputs.image }}
+          echo ${{ needs.Dockerfile-publish.outputs.image }}
    
       
   Create-kind-cluster:
