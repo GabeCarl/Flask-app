@@ -44,8 +44,6 @@ jobs:
   Dockerfile-publish:
     needs: Pytest
     runs-on: ubuntu-latest
-    outputs:
-      image: ${{ steps.docker-image.outputs.IMAGE }}
     steps:
       - name: Artifact download repo
         uses: actions/download-artifact@v5
@@ -69,7 +67,10 @@ jobs:
 
       - name: Set output
         id: docker-image
-        run: echo "IMAGE=$gabrielcarl/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT
+        run: echo "IMAGE=$/flask-app:${{ github.run_number }}" >> $GITHUB_OUTPUT'
+
+    outputs:
+      image: ${{ steps.docker-image.outputs.IMAGE }}
     
       
   Create-kind-cluster:
@@ -86,8 +87,8 @@ jobs:
 
       - name: Apply manifests
         run: |
-          docker pull ${{ needs.Dockerfile-publish.outputs.image }}
-          kind load docker-image ${{ needs.Dockerfile-publish.outputs.image }}
+          docker pull ${{ secrets.DOCKER_USERNAME }}${{ needs.Dockerfile-publish.outputs.image }}
+          kind load docker-image ${{ secrets.DOCKER_USERNAME }}${{ needs.Dockerfile-publish.outputs.image }}
           kubectl apply --record -f k8s/
       
       - name: Get IP and NodePort
